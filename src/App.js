@@ -461,24 +461,461 @@ const App = () => {
       { text: "Élever l'esprit par la foi", isCorrect: false },
   ],
 },
+
 {
-  question: "Que veut dire CIPS au MJ ?",
+  question: "Quel pays, situé au nord-ouest de l'Afrique, a des côtes sur l'Atlantique et la Méditerranée ?",
   answers: [
-      { text: "Commission Intellectuelle et Politique Supérieure", isCorrect: false },
+      { text: "Algérie", isCorrect: false },
+      { text: "Maroc", isCorrect: true },
+      { text: "Tunisie", isCorrect: false },
+      { text: "Libye", isCorrect: false },
+  ],
+},
+{
+  question: "Quel félin peut atteindre une vitesse de 110 km/h dans les plaines africaines ?",
+  answers: [
+      { text: "Lion", isCorrect: false },
+      { text: "Guépard", isCorrect: true },
+      { text: "Léopard", isCorrect: false },
+      { text: "Tigre", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est l'année où Keur Massar est devenu le 46e département du Sénégal ?",
+  answers: [
+      { text: "2021", isCorrect: false },
+      { text: "2022", isCorrect: true },
+      { text: "2020", isCorrect: false },
+      { text: "2019", isCorrect: false },
+  ],
+},
+{
+  question: "Qui est l'auteur de 'Coup de Pilon' ?",
+  answers: [
+      { text: "David Diop", isCorrect: true },
+      { text: "Seydou Badian", isCorrect: false },
+      { text: "Marouba Fall", isCorrect: false },
+      { text: "Antoine de Saint-Exupéry", isCorrect: false },
+  ],
+},
+{
+  question: "Quel est le thème de la troisième édition du Colisée de l’éveil ?",
+  answers: [
+      { text: "Al Ihsaan, gage d'une servitude féconde", isCorrect: false },
+      { text: "Élégance divine, principe humain : une créature digne de son créateur", isCorrect: true },
+      { text: "Sous le regard de Dieu", isCorrect: false },
+      { text: "La jeunesse musulmane d’un siècle à un autre", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est la date de la dernière élection législative au Sénégal ?",
+  answers: [
+      { text: "17 novembre 2024", isCorrect: true },
+      { text: "12 décembre 2024", isCorrect: false },
+      { text: "10 octobre 2024", isCorrect: false },
+      { text: "15 janvier 2025", isCorrect: false },
+  ],
+},
+{
+  question: "Comment appelle-t-on un monument de pierre en forme d’aiguille terminé par une pyramide ?",
+  answers: [
+      { text: "Obélisque", isCorrect: true },
+      { text: "Sphinx", isCorrect: false },
+      { text: "Colosse", isCorrect: false },
+      { text: "Statue", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est la durée de vie de Fâtima après le décès du Prophète Muhammad (PSL) ?",
+  answers: [
+      { text: "6 mois", isCorrect: true },
+      { text: "3 ans", isCorrect: false },
+      { text: "2 ans", isCorrect: false },
+      { text: "1 an", isCorrect: false },
+  ],
+},
+{
+  question: "Combien de fois le mot 'Muhammad' apparaît-il dans le Coran ?",
+  answers: [
+      { text: "4 fois", isCorrect: true },
+      { text: "3 fois", isCorrect: false },
+      { text: "5 fois", isCorrect: false },
+      { text: "6 fois", isCorrect: false },
+  ],
+},
+{
+  question: "Quel est le nom de la coalition créée par les partis PDS et APR au Sénégal ?",
+  answers: [
+      { text: "Takku-Wallu", isCorrect: true },
+      { text: "Benno Bokk Yaakaar", isCorrect: false },
+      { text: "Yewwi Askan Wi", isCorrect: false },
+      { text: "Coalition Manko", isCorrect: false },
+  ],
+},
+{
+  question: "Quel pays d'Afrique centrale abrite l'une des plus grandes forêts tropicales au monde ?",
+  answers: [
+      { text: "République Démocratique du Congo", isCorrect: true },
+      { text: "Gabon", isCorrect: false },
+      { text: "Cameroun", isCorrect: false },
+      { text: "Rwanda", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est l'année marquant la première alternance politique au Sénégal ?",
+  answers: [
+      { text: "2000", isCorrect: true },
+      { text: "2012", isCorrect: false },
+      { text: "1980", isCorrect: false },
+      { text: "1993", isCorrect: false },
+  ],
+},
+{
+  question: "Qui est l'actuel président de la France ?",
+  answers: [
+      { text: "Emmanuel Macron", isCorrect: true },
+      { text: "François Hollande", isCorrect: false },
+      { text: "Nicolas Sarkozy", isCorrect: false },
+      { text: "Jacques Chirac", isCorrect: false },
+  ],
+},
+{
+  question: "Que signifie 'épistémologie' ?",
+  answers: [
+      { text: "Étude critique des sciences, de leurs méthodes et de leurs principes", isCorrect: true },
+      { text: "Étude des champignons", isCorrect: false },
+      { text: "Interprétation approfondie d’un texte", isCorrect: false },
+      { text: "Figure de style qui rapproche deux termes opposés", isCorrect: false },
+  ],
+},
+{
+  question: "Dans quelle région du Sénégal trouve-t-on la chute de Dindéfelo ?",
+  answers: [
+      { text: "Kédougou", isCorrect: true },
+      { text: "Casamance", isCorrect: false },
+      { text: "Tambacounda", isCorrect: false },
+      { text: "Saint-Louis", isCorrect: false },
+  ],
+},
+{
+  question: "Quel était le nom du programme gouvernemental de Macky Sall ?",
+  answers: [
+      { text: "PSE (Plan Sénégal Émergent)", isCorrect: true },
+      { text: "Plan Jappo", isCorrect: false },
+      { text: "Programme Sédar Senghor", isCorrect: false },
+      { text: "Emergence 2035", isCorrect: false },
+  ],
+},
+{
+  question: "Qui est l'auteur de 'La Collégienne' ?",
+  answers: [
+      { text: "Marouba Fall", isCorrect: true },
+      { text: "Seydou Badian", isCorrect: false },
+      { text: "David Diop", isCorrect: false },
+      { text: "Antoine de Saint-Exupéry", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est l'unité internationale de puissance dans le SI ?",
+  answers: [
+      { text: "Watt", isCorrect: true },
+      { text: "Joule", isCorrect: false },
+      { text: "Newton", isCorrect: false },
+      { text: "Ampère", isCorrect: false },
+  ],
+},
+{
+  question: "Quel reptile célèbre pour sa longévité vit aussi bien sur terre que dans l'eau ?",
+  answers: [
+      { text: "Tortue", isCorrect: true },
+      { text: "Crocodile", isCorrect: false },
+      { text: "Iguane", isCorrect: false },
+      { text: "Varan", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est la science qui étudie les climats ?",
+  answers: [
+      { text: "Météorologie", isCorrect: true },
+      { text: "Océanographie", isCorrect: false },
+      { text: "Astronomie", isCorrect: false },
+      { text: "Géologie", isCorrect: false },
+  ],
+},
+{
+  question: "Quel scientifique est connu pour avoir développé la théorie de l'évolutionnisme ?",
+  answers: [
+      { text: "Isaac Newton", isCorrect: false },
+      { text: "Charles Darwin", isCorrect: true },
+      { text: "Galilée", isCorrect: false },
+      { text: "Albert Einstein", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est la signification du terme 'axiome' ?",
+  answers: [
+      { text: "Proposition considérée comme évidente", isCorrect: true },
+      { text: "Maladie incurable", isCorrect: false },
+      { text: "Distance entre deux planètes", isCorrect: false },
+      { text: "Axe incliné", isCorrect: false },
+  ],
+},
+{
+  question: "Comment appelle-t-on une personne capable de voir dans le noir ?",
+  answers: [
+      { text: "Nyctalope", isCorrect: true },
+      { text: "Presbyte", isCorrect: false },
+      { text: "Myope", isCorrect: false },
+      { text: "Astigmate", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est l'unité internationale de mesure de l'intensité électrique ?",
+  answers: [
+      { text: "Ampère", isCorrect: true },
+      { text: "Volt", isCorrect: false },
+      { text: "Ohm", isCorrect: false },
+      { text: "Watt", isCorrect: false },
+  ],
+},
+{
+  question: "Dans quel pays se trouve le désert du Kalahari ?",
+  answers: [
+      { text: "Botswana", isCorrect: true },
+      { text: "Soudan", isCorrect: false },
+      { text: "Égypte", isCorrect: false },
+      { text: "Mali", isCorrect: false },
+  ],
+},
+{
+  question: "Quel organe est surnommé 'ambassadeur de l’âme' dans le corps humain ?",
+  answers: [
+      { text: "Le cœur", isCorrect: true },
+      { text: "Le cerveau", isCorrect: false },
+      { text: "Les poumons", isCorrect: false },
+      { text: "Le foie", isCorrect: false },
+  ],
+},
+{
+  question: "Quel est le nom du fils de Cheikh Anta Diop né en 1818 et protecteur de son terroir ?",
+  answers: [
+      { text: "Caago", isCorrect: false },
+      { text: "Allou Kaagn", isCorrect: true },
+      { text: "Samba Faye", isCorrect: false },
+      { text: "Ndiaga Ndour", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle franchise NBA a remporté les finals en 2024 ?",
+  answers: [
+      { text: "Boston Celtics", isCorrect: true },
+      { text: "Los Angeles Lakers", isCorrect: false },
+      { text: "Golden State Warriors", isCorrect: false },
+      { text: "Miami Heat", isCorrect: false },
+  ],
+},
+{
+  question: "Quelle est la signification de CIPS dans le MJ ?",
+  answers: [
       { text: "Commission d’Intelligence et de Perception Spirituelle", isCorrect: true },
-      { text: "Centre International pour la Paix et la Spiritualité", isCorrect: false },
-      { text: "Collectif Islamique de la Pensée Sénégalaise", isCorrect: false },
+      { text: "Centre pour l’Innovation et la Planification Systématique", isCorrect: false },
+      { text: "Comité International de Planification Systémique", isCorrect: false },
+      { text: "Collectif pour l’Innovation et le Partage Spirituel", isCorrect: false },
   ],
 },
 {
-  question: "Quel pays est connu pour la Vallée du Grand Rift et le Kilimandjaro ?",
+  question: "Quel élément détient les ressources de la dimension physique de l’homme ?",
   answers: [
-      { text: "Éthiopie", isCorrect: false },
-      { text: "Tanzanie", isCorrect: true },
-      { text: "Kenya", isCorrect: false },
-      { text: "Ouganda", isCorrect: false },
+      { text: "Souffle de vie", isCorrect: true },
+      { text: "Esprit", isCorrect: false },
+      { text: "Identité absolue", isCorrect: false },
+      { text: "Noyau humain", isCorrect: false },
   ],
 },
+
+  {
+      question: "Quelle est la capitale de l'Ukraine, au cœur de la guerre en 2022 ?",
+      answers: [
+          { text: "Minsk", isCorrect: false },
+          { text: "Kiev", isCorrect: true },
+          { text: "Varsovie", isCorrect: false },
+          { text: "Vilnius", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quel pays a accueilli la Coupe du Monde de football en 2022 ?",
+      answers: [
+          { text: "Qatar", isCorrect: true },
+          { text: "Brésil", isCorrect: false },
+          { text: "Russie", isCorrect: false },
+          { text: "Afrique du Sud", isCorrect: false },
+      ],
+  },
+  {
+      question: "Qui est l'actuel président des États-Unis (2025) ?",
+      answers: [
+          { text: "Donald Trump", isCorrect: false },
+          { text: "Joe Biden", isCorrect: true },
+          { text: "Barack Obama", isCorrect: false },
+          { text: "Kamala Harris", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quel est le nom de la mission spatiale qui a récemment envoyé des humains sur la Lune ?",
+      answers: [
+          { text: "Artemis", isCorrect: true },
+          { text: "Apollo", isCorrect: false },
+          { text: "Mars One", isCorrect: false },
+          { text: "SpaceX Lunar", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quel est le pays africain qui a récemment rejoint les BRICS en 2024 ?",
+      answers: [
+          { text: "Nigeria", isCorrect: false },
+          { text: "Égypte", isCorrect: true },
+          { text: "Kenya", isCorrect: false },
+          { text: "Algérie", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quelle organisation a récemment publié le rapport sur le changement climatique 2024 ?",
+      answers: [
+          { text: "IPCC (GIEC)", isCorrect: true },
+          { text: "OMS", isCorrect: false },
+          { text: "UNESCO", isCorrect: false },
+          { text: "FAO", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quelle est la ville hôte des Jeux Olympiques 2024 ?",
+      answers: [
+          { text: "Paris", isCorrect: true },
+          { text: "Los Angeles", isCorrect: false },
+          { text: "Tokyo", isCorrect: false },
+          { text: "Londres", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quelle entreprise est devenue la première à atteindre une valorisation de 3 trillions de dollars en 2023 ?",
+      answers: [
+          { text: "Apple", isCorrect: true },
+          { text: "Microsoft", isCorrect: false },
+          { text: "Amazon", isCorrect: false },
+          { text: "Google", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quel vaccin contre le paludisme a été approuvé par l'OMS en 2023 ?",
+      answers: [
+          { text: "RTS,S", isCorrect: true },
+          { text: "Pfizer-BioNTech", isCorrect: false },
+          { text: "Moderna", isCorrect: false },
+          { text: "AstraZeneca", isCorrect: false },
+      ],
+  },
+  {
+      question: "Quel pays a remporté la Coupe du Monde de Rugby 2023 ?",
+      answers: [
+          { text: "Afrique du Sud", isCorrect: true },
+          { text: "Nouvelle-Zélande", isCorrect: false },
+          { text: "Angleterre", isCorrect: false },
+          { text: "France", isCorrect: false },
+      ],
+  },
+
+  {
+    question: "Quel pays a organisé la COP28 en 2023 ?",
+    answers: [
+        { text: "Émirats Arabes Unis", isCorrect: true },
+        { text: "Égypte", isCorrect: false },
+        { text: "France", isCorrect: false },
+        { text: "Brésil", isCorrect: false },
+    ],
+},
+{
+    question: "Quelle intelligence artificielle développée par OpenAI est sortie en 2024 ?",
+    answers: [
+        { text: "GPT-5", isCorrect: true },
+        { text: "GPT-3", isCorrect: false },
+        { text: "Bard AI", isCorrect: false },
+        { text: "ChatGPT Legacy", isCorrect: false },
+    ],
+},
+{
+    question: "Quel pays a envoyé la première mission habitée sur Mars en 2024 ?",
+    answers: [
+        { text: "États-Unis", isCorrect: true },
+        { text: "Chine", isCorrect: false },
+        { text: "Russie", isCorrect: false },
+        { text: "Inde", isCorrect: false },
+    ],
+},
+{
+    question: "Quelle star mondiale a remporté le Ballon d’Or 2024 ?",
+    answers: [
+        { text: "Lionel Messi", isCorrect: false },
+        { text: "Kylian Mbappé", isCorrect: true },
+        { text: "Erling Haaland", isCorrect: false },
+        { text: "Cristiano Ronaldo", isCorrect: false },
+    ],
+},
+{
+    question: "Quelle monnaie numérique a atteint un pic record en 2024 ?",
+    answers: [
+        { text: "Bitcoin", isCorrect: true },
+        { text: "Ethereum", isCorrect: false },
+        { text: "Dogecoin", isCorrect: false },
+        { text: "Litecoin", isCorrect: false },
+    ],
+},
+{
+    question: "Quel pays a remporté les Jeux Olympiques 2024 à Paris en termes de médailles d’or ?",
+    answers: [
+        { text: "États-Unis", isCorrect: true },
+        { text: "Chine", isCorrect: false },
+        { text: "France", isCorrect: false },
+        { text: "Japon", isCorrect: false },
+    ],
+},
+{
+    question: "Quel scientifique a récemment remporté le prix Nobel de Physique 2024 ?",
+    answers: [
+        { text: "Anne L'Huillier", isCorrect: true },
+        { text: "Gérard Mourou", isCorrect: false },
+        { text: "Donna Strickland", isCorrect: false },
+        { text: "Alain Aspect", isCorrect: false },
+    ],
+},
+{
+    question: "Quel accord international signé en 2024 concerne la protection des océans ?",
+    answers: [
+        { text: "Traité de la haute mer", isCorrect: true },
+        { text: "Accord de Paris 2.0", isCorrect: false },
+        { text: "Protocole de Kyoto révisé", isCorrect: false },
+        { text: "Pacte pour les mers bleues", isCorrect: false },
+    ],
+},
+{
+    question: "Quelle grande entreprise a annoncé sa transition vers une production 100% verte en 2024 ?",
+    answers: [
+        { text: "Tesla", isCorrect: true },
+        { text: "Amazon", isCorrect: false },
+        { text: "Microsoft", isCorrect: false },
+        { text: "Apple", isCorrect: false },
+    ],
+},
+{
+    question: "Quel pays est devenu le dernier membre permanent du Conseil de Sécurité de l’ONU en 2024 ?",
+    answers: [
+        { text: "Inde", isCorrect: true },
+        { text: "Brésil", isCorrect: false },
+        { text: "Afrique du Sud", isCorrect: false },
+        { text: "Allemagne", isCorrect: false },
+    ],
+},
+
+
 
     ]);
     const [score, setScore] = useState(0);
