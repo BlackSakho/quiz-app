@@ -73,9 +73,11 @@ const Quiz = ({ questions, onFinish }) => {
     return (
         <div className="App">
             <div>
-                <h2 style={{ textAlign: 'center', fontSize: '24px', marginTop: '20px', marginBottom: '20px', fontFamily: 'Arial, sans-serif' }}>
+                <button style={{ backgroundColor:'blue', borderRadius: '40px 40px 40px 40px', }}>
+                <h2 style={{ textAlign: 'center', fontSize: '24px', marginTop: '20px', marginBottom: '20px', fontFamily: 'Arial, sans-serif'  }}>
                     Question {currentQuestion + 1} / {shuffledQuestions.length}
                 </h2>
+                </button>
                 <p>{shuffledQuestions[currentQuestion]?.question}</p>
                 {shuffledQuestions[currentQuestion]?.answers.map((answer, index) => (
                     <button
@@ -105,7 +107,7 @@ const Quiz = ({ questions, onFinish }) => {
                         <p>La bonne réponse est : {shuffledQuestions[currentQuestion].answers.find(a => a.isCorrect).text}</p>
                     </div>
                 )}
-                <p>Erreurs : {mistakes} / 3</p>
+                <p style={{ color: 'red' }}>Erreurs : {mistakes} / 3</p>
                 <p>Temps restant : {timeLeft}s</p>
                 {answered && (
                     <button onClick={nextQuestion} style={{ padding: '10px', fontSize: '16px', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '5px' }}>

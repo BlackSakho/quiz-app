@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from './assets/images/banner.jpg';
+import backgroundImage from './assets/images/bookpii.webp';
 
 
 const Home = ({ startQuiz }) => {
