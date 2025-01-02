@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from './assets/images/banner.jpg';
+
 
 
 const Result = ({ score, total, restartQuiz }) => {

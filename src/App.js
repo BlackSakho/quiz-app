@@ -8,7 +8,7 @@ import './index.css';
 
 const App = () => {
     const [step, setStep] = useState('home');
-    const [questions, setQuestions] = useState([
+    const [questions ] = useState([
         {
             question: 'Quelle est la capitale de la France ?',
             answers: [
