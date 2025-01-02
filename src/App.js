@@ -754,8 +754,8 @@ const App = () => {
   {
       question: "Qui est l'actuel président des États-Unis (2025) ?",
       answers: [
-          { text: "Donald Trump", isCorrect: false },
-          { text: "Joe Biden", isCorrect: true },
+          { text: "Donald Trump", isCorrect: true },
+          { text: "Joe Biden", isCorrect: false },
           { text: "Barack Obama", isCorrect: false },
           { text: "Kamala Harris", isCorrect: false },
       ],
@@ -855,8 +855,8 @@ const App = () => {
     question: "Quelle star mondiale a remporté le Ballon d’Or 2024 ?",
     answers: [
         { text: "Lionel Messi", isCorrect: false },
-        { text: "Kylian Mbappé", isCorrect: true },
-        { text: "Erling Haaland", isCorrect: false },
+        { text: "Vinicius Jr", isCorrect: true },
+        { text: "Rodri", isCorrect: false },
         { text: "Cristiano Ronaldo", isCorrect: false },
     ],
 },
@@ -882,7 +882,7 @@ const App = () => {
     question: "Quel scientifique a récemment remporté le prix Nobel de Physique 2024 ?",
     answers: [
         { text: "Anne L'Huillier", isCorrect: true },
-        { text: "Gérard Mourou", isCorrect: false },
+        { text: "John Hopfield et Geoffrey Hinton", isCorrect: false },
         { text: "Donna Strickland", isCorrect: false },
         { text: "Alain Aspect", isCorrect: false },
     ],
@@ -908,7 +908,7 @@ const App = () => {
 {
     question: "Quel pays est devenu le dernier membre permanent du Conseil de Sécurité de l’ONU en 2024 ?",
     answers: [
-        { text: "Inde", isCorrect: true },
+        { text: "Aucun", isCorrect: true },
         { text: "Brésil", isCorrect: false },
         { text: "Afrique du Sud", isCorrect: false },
         { text: "Allemagne", isCorrect: false },
