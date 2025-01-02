@@ -10,7 +10,7 @@ const Home = ({ startQuiz }) => {
             <button onClick={startQuiz}>Commencer le Quiz</button>
             </div>
         </div>
-    );
+    );  
 };
 
 export default Home;
