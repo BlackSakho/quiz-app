@@ -1,0 +1,32 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 1.5em;
+ 
+  
+}
+
+button {
+  margin: 300px;
+  padding: 10px 20px;
+  font-size: 26px;
+  background-color:rgb(3, 30, 183);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color:rgb(46, 194, 120);
+}
+.App {
+  background-image: url('./components/assets/images/banner.jpg');
+  background-size: cover; /* Cela va s'assurer que l'image couvre toute la surface */
+  background-position: center; /* Centrer l'image */
+  background-repeat: no-repeat; /* Empêche l'image de se répéter */
+  height: 100vh; /* Pour que l'image couvre toute la hauteur de la fenêtre */
+  max-width:100%;
+  width: 100%;
+  color: white; /* Exemple de style de texte */
+}
