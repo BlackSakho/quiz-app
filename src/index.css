@@ -30,3 +30,7 @@ button:hover {
   width: 100%;
   color: white; /* Exemple de style de texte */
 }
+.stars {
+  font-size: 24px;
+  color: gold;
+}
