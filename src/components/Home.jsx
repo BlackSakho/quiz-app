@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import backgroundImage from "./assets/images/bookpii.webp";
+
 
 const Home = ({ startQuiz }) => {
   const [isAnimating, setIsAnimating] = useState(false);
