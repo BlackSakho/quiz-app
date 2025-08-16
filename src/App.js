@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Home from "./components/Home";
 import Quiz from "./components/Quiz";
 import Result from "./components/Result";
 import Leaderboard from "./components/Leaderboard";
 import About from "./components/About";
-import { FaHome, FaTrophy, FaInfoCircle, FaGamepad, FaBars } from "react-icons/fa";
+import {
+  FaHome,
+  FaTrophy,
+  FaInfoCircle,
+  FaGamepad,
+  FaBars,
+} from "react-icons/fa";
 import { questions } from "./data/questions";
+import { supabase } from "./utils/supabaseClient";
 import "./index.css";
 
 const App = () => {
@@ -24,9 +31,30 @@ const App = () => {
     setScore(0);
     setStep("home");
   };
-  const saveScore = (name, score) => {
-    setLeaderboard((prev) => [...prev, { name, score }]);
+
+  // Charger le classement global au démarrage
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      const { data, error } = await supabase
+        .from("leaderboard")
+        .select("*")
+        .order("score", { ascending: false });
+      if (!error) setLeaderboard(data);
+    };
+    fetchLeaderboard();
+  }, []);
+
+  // Sauvegarder un score global
+  const saveScore = async (name, score) => {
+    await supabase.from("leaderboard").insert([{ name, score }]);
+    // Recharge le classement après ajout
+    const { data } = await supabase
+      .from("leaderboard")
+      .select("*")
+      .order("score", { ascending: false });
+    setLeaderboard(data);
   };
+
   const goLeaderboard = () => setStep("leaderboard");
   const goHome = () => setStep("home");
   const goAbout = () => setStep("about");
@@ -42,21 +70,21 @@ const App = () => {
           </div>
 
           <div className="navbar-links">
-            <button 
+            <button
               className={`nav-link ${step === "home" ? "active" : ""}`}
               onClick={goHome}
             >
               <FaHome className="nav-icon" />
               <span>Accueil</span>
             </button>
-            <button 
+            <button
               className={`nav-link ${step === "leaderboard" ? "active" : ""}`}
               onClick={goLeaderboard}
             >
               <FaTrophy className="nav-icon" />
               <span>Classement</span>
             </button>
-            <button 
+            <button
               className={`nav-link ${step === "about" ? "active" : ""}`}
               onClick={goAbout}
             >
@@ -65,8 +93,8 @@ const App = () => {
             </button>
           </div>
 
-          <button 
-            className="navbar-toggle" 
+          <button
+            className="navbar-toggle"
             onClick={toggleMobileMenu}
             aria-label="Menu"
           >
@@ -77,23 +105,32 @@ const App = () => {
         {/* Menu mobile */}
         {mobileMenuOpen && (
           <div className="navbar-mobile">
-            <button 
+            <button
               className={`nav-link ${step === "home" ? "active" : ""}`}
-              onClick={() => { goHome(); setMobileMenuOpen(false); }}
+              onClick={() => {
+                goHome();
+                setMobileMenuOpen(false);
+              }}
             >
               <FaHome className="nav-icon" />
               <span>Accueil</span>
             </button>
-            <button 
+            <button
               className={`nav-link ${step === "leaderboard" ? "active" : ""}`}
-              onClick={() => { goLeaderboard(); setMobileMenuOpen(false); }}
+              onClick={() => {
+                goLeaderboard();
+                setMobileMenuOpen(false);
+              }}
             >
               <FaTrophy className="nav-icon" />
               <span>Classement</span>
             </button>
-            <button 
+            <button
               className={`nav-link ${step === "about" ? "active" : ""}`}
-              onClick={() => { goAbout(); setMobileMenuOpen(false); }}
+              onClick={() => {
+                goAbout();
+                setMobileMenuOpen(false);
+              }}
             >
               <FaInfoCircle className="nav-icon" />
               <span>À propos</span>
@@ -105,7 +142,9 @@ const App = () => {
       {/* Contenu principal */}
       <main className="main-content">
         {step === "home" && <Home startQuiz={startQuiz} />}
-        {step === "quiz" && <Quiz questions={questions} onFinish={finishQuiz} />}
+        {step === "quiz" && (
+          <Quiz questions={questions} onFinish={finishQuiz} />
+        )}
         {step === "result" && (
           <Result
             score={score}
