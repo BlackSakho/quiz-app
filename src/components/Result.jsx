@@ -1,113 +1,129 @@
 import React, { useEffect, useState } from "react";
+import { FaRedo, FaTrophy, FaCheck, FaUser } from "react-icons/fa";
 
 const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showElements, setShowElements] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [saved, setSaved] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
 
   useEffect(() => {
     setIsAnimating(true);
     const timer = setTimeout(() => {
       setIsAnimating(false);
       setShowElements(true);
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (showElements) {
+      const pulseTimer = setInterval(() => {
+        setIsPulsing(prev => !prev);
+      }, 1500);
+      return () => clearInterval(pulseTimer);
+    }
+  }, [showElements]);
 
   const getLevel = (score) => {
     const percentage = (score / total) * 100;
 
     if (percentage <= 20) {
       return {
-        level: "Diangal gua bagn",
+        level: "Débutant",
         stars: "★☆☆☆☆",
         emoji: "😢",
         color: "#FF5252",
         comment: "Tout petit effort à faire !",
+        badge: "Bronze"
       };
     } else if (percentage <= 40) {
       return {
-        level: "Tu peux faire mieux touti effort rek",
+        level: "Intermédiaire",
         stars: "★★☆☆☆",
         emoji: "😕",
         color: "#FF9800",
         comment: "Encore un peu d'effort !",
+        badge: "Argent"
       };
     } else if (percentage <= 60) {
       return {
-        level: "Nandite yi na ame moyenne rek",
+        level: "Avancé",
         stars: "★★★☆☆",
         emoji: "😐",
         color: "#FFC107",
         comment: "Pas mal, mais peut mieux faire !",
+        badge: "Or"
       };
     } else if (percentage <= 80) {
       return {
-        level: "Niveau AKK",
+        level: "Expert",
         stars: "★★★★☆",
         emoji: "😊",
         color: "#4CAF50",
         comment: "Bon score !",
+        badge: "Platine"
       };
     } else {
       return {
-        level: "Nit gue ioe?",
+        level: "Maître",
         stars: "★★★★★",
         emoji: "🤩",
         color: "#2196F3",
         comment: "Excellent ! T'es un génie !",
+        badge: "Diamant"
       };
     }
   };
 
-  const { level, stars, emoji, color, comment } = getLevel(score);
+  const { level, stars, emoji, color, comment, badge } = getLevel(score);
   const percentage = Math.round((score / total) * 100);
 
-  return (
-    <div style={styles.container}>
-      <div
-        style={{
-          ...styles.resultCard,
-          transform: isAnimating ? "scale(0.9)" : "scale(1)",
-          opacity: isAnimating ? 0 : 1,
-          transition: "all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-        }}
-      >
-        <h1 style={styles.title}>Résultats</h1>
+  const handleSaveScore = () => {
+    if (playerName.trim()) {
+      saveScore(playerName, score);
+      setSaved(true);
+    }
+  };
 
-        <div style={styles.scoreCircle(color)}>
-          <span style={styles.scorePercentage}>{percentage}%</span>
+  return (
+    <div className="result-container">
+      <div 
+        className={`result-card ${isAnimating ? 'result-card-entering' : ''}`}
+        style={{ '--level-color': color }}
+      >
+        <div className="result-header">
+          <h1>Résultats du Quiz</h1>
+          <div className="score-circle">
+            <span className="score-percentage">{percentage}%</span>
+            <div className="score-badge">{badge}</div>
+          </div>
         </div>
 
         {showElements && (
-          <>
-            <p style={styles.scoreText}>
-              Vous avez obtenu <strong>{score}</strong> sur{" "}
-              <strong>{total}</strong> points
-            </p>
+          <div className="result-content">
+            <div className="score-summary">
+              <p>Vous avez obtenu <strong>{score}</strong> sur <strong>{total}</strong> points</p>
+            </div>
 
-            <div style={styles.levelContainer}>
-              <span style={styles.emoji}>{emoji}</span>
-              <div>
-                <p style={styles.levelText}>
-                  Niveau : <strong style={{ color }}>{level}</strong>
-                </p>
-                <p style={styles.commentText}>{comment}</p>
+            <div className="level-container">
+              <span className="level-emoji" role="img" aria-label="Niveau">{emoji}</span>
+              <div className="level-info">
+                <h3>Niveau atteint</h3>
+                <p className="level-title" style={{ color }}>{level}</p>
+                <p className="level-comment">{comment}</p>
               </div>
             </div>
 
-            <div style={styles.starsContainer}>
-              <p style={styles.starsText}>Évaluation :</p>
-              <div style={{ ...styles.stars, color: "#FFD700" }}>
+            <div className="stars-rating">
+              <p>Votre évaluation :</p>
+              <div className="stars">
                 {stars.split("").map((star, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      fontSize: "2rem",
-                      opacity: star === "★" ? 1 : 0.3,
-                      transition: `opacity 0.3s ${index * 0.1}s`,
-                    }}
+                  <span 
+                    key={index} 
+                    className={`star ${star === "★" ? 'active' : ''}`}
+                    style={{ transitionDelay: `${index * 0.1}s` }}
                   >
                     {star}
                   </span>
@@ -115,169 +131,317 @@ const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
               </div>
             </div>
 
-            {!saved && (
-              <div style={{ marginTop: "2rem" }}>
-                <input
-                  type="text"
-                  placeholder="Votre nom"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  style={{
-                    padding: "8px",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    if (playerName.trim()) {
-                      saveScore(playerName, score);
-                      setSaved(true);
-                    }
-                  }}
-                  style={{ marginLeft: "1rem" }}
+            {!saved ? (
+              <div className="save-score-form">
+                <div className="input-group">
+                  <FaUser className="input-icon" />
+                  <input
+                    type="text"
+                    placeholder="Entrez votre nom"
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value)}
+                    className="name-input"
+                  />
+                </div>
+                <button 
+                  onClick={handleSaveScore}
+                  disabled={!playerName.trim()}
+                  className={`save-button ${isPulsing ? 'pulse' : ''}`}
                 >
+                  <FaCheck className="button-icon" />
                   Enregistrer mon score
                 </button>
               </div>
-            )}
-            {saved && (
-              <button onClick={goLeaderboard} style={{ marginTop: "1rem" }}>
+            ) : (
+              <button 
+                onClick={goLeaderboard} 
+                className="leaderboard-button"
+              >
+                <FaTrophy className="button-icon" />
                 Voir le classement
               </button>
             )}
 
-            <button
-              onClick={restartQuiz}
-              style={styles.restartButton}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform =
-                  "translateY(-2px) scale(1.02)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "translateY(0) scale(1)")
-              }
+            <button 
+              onClick={restartQuiz} 
+              className="restart-button"
             >
+              <FaRedo className="button-icon" />
               Rejouer le Quiz
-              <span style={styles.buttonIcon}>🔄</span>
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#f5f7fa",
-    fontFamily: "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
-    padding: "20px",
-  },
-  resultCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: "20px",
-    padding: "2.5rem",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-    textAlign: "center",
-    maxWidth: "500px",
-    width: "100%",
-  },
-  title: {
-    fontSize: "2rem",
-    color: "#333",
-    marginBottom: "1.5rem",
-    fontWeight: "700",
-  },
-  scoreCircle: (color) => ({
-    width: "150px",
-    height: "150px",
-    borderRadius: "50%",
-    backgroundColor: `${color}20`,
-    border: `5px solid ${color}`,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "0 auto 1.5rem",
-    transition: "all 0.5s ease",
-  }),
-  scorePercentage: {
-    fontSize: "2.5rem",
-    fontWeight: "700",
-    color: "#333",
-  },
-  scoreText: {
-    fontSize: "1.2rem",
-    color: "#555",
-    marginBottom: "1.5rem",
-  },
-  levelContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "15px",
-    marginBottom: "1.5rem",
-    backgroundColor: "#f9f9f9",
-    padding: "15px",
-    borderRadius: "12px",
-  },
-  emoji: {
-    fontSize: "2.5rem",
-  },
-  levelText: {
-    fontSize: "1.1rem",
-    margin: "0",
-    textAlign: "left",
-  },
-  commentText: {
-    fontSize: "0.9rem",
-    color: "#666",
-    margin: "5px 0 0",
-    textAlign: "left",
-    fontStyle: "italic",
-  },
-  starsContainer: {
-    marginBottom: "2rem",
-  },
-  starsText: {
-    fontSize: "1rem",
-    color: "#666",
-    marginBottom: "0.5rem",
-  },
-  stars: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "5px",
-  },
-  restartButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-    width: "100%",
-    padding: "15px",
-    fontSize: "1rem",
-    fontWeight: "600",
-    backgroundColor: "#2196F3",
-    color: "white",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    boxShadow: "0 4px 12px rgba(33, 150, 243, 0.2)",
-    transform: "translateY(0) scale(1)",
-    ":hover": {
-      backgroundColor: "#1976D2",
-    },
-  },
-  buttonIcon: {
-    fontSize: "1.2rem",
-    transition: "transform 0.3s ease",
-  },
-};
+// CSS (à mettre dans un fichier séparé ou dans styled-components)
+const styles = `
+.result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 20px;
+}
+
+.result-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  transform: scale(1);
+  opacity: 1;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--level-color);
+}
+
+.result-card-entering {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.result-header {
+  margin-bottom: 2rem;
+}
+
+.result-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.score-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: rgba(var(--level-color), 0.1);
+  border: 5px solid var(--level-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.score-percentage {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.score-badge {
+  position: absolute;
+  bottom: -10px;
+  background-color: var(--level-color);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.result-content {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.score-summary {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.score-summary strong {
+  color: var(--level-color);
+  font-weight: 700;
+}
+
+.level-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.level-emoji {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.level-info {
+  flex-grow: 1;
+}
+
+.level-info h3 {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.level-title {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.level-comment {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0 0;
+  font-style: italic;
+}
+
+.stars-rating {
+  margin-bottom: 2rem;
+}
+
+.stars-rating p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.star {
+  font-size: 2rem;
+  color: #FFD700;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.star.active {
+  opacity: 1;
+}
+
+.save-score-form {
+  margin: 2rem 0;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.name-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: var(--level-color);
+  box-shadow: 0 0 0 2px rgba(var(--level-color), 0.2);
+}
+
+.save-button, .leaderboard-button, .restart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.save-button {
+  background-color: var(--level-color);
+  color: white;
+}
+
+.save-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.save-button.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+.leaderboard-button {
+  background-color: #FFD700;
+  color: #333;
+}
+
+.restart-button {
+  background-color: #2196F3;
+  color: white;
+}
+
+.save-button:hover:not(:disabled), 
+.leaderboard-button:hover, 
+.restart-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-icon {
+  font-size: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--level-color), 0.4); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(var(--level-color), 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--level-color), 0); }
+}
+`;
+
+// Ajouter les styles au document
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 export default Result;
