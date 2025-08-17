@@ -66,7 +66,7 @@ const App = () => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={goHome}>
             <FaGamepad className="navbar-icon" />
-            <span className="navbar-title">Quiz Culture G</span>
+            <span className="navbar-title">Challenge  </span>
           </div>
 
           <div className="navbar-links">
