@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient";
 
 export async function createBattle(playerName) {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("battles")
     .insert([
       {
@@ -16,7 +16,7 @@ export async function createBattle(playerName) {
 }
 
 export async function joinBattle(battleId, playerName) {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("battles")
     .update({
       player2: playerName,
