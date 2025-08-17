@@ -4,6 +4,7 @@ import Quiz from "./components/Quiz";
 import Result from "./components/Result";
 import Leaderboard from "./components/Leaderboard";
 import About from "./components/About";
+import Battle from "./components/Battle";
 import {
   FaHome,
   FaTrophy,
@@ -58,6 +59,7 @@ const App = () => {
   const goLeaderboard = () => setStep("leaderboard");
   const goHome = () => setStep("home");
   const goAbout = () => setStep("about");
+  const goBattle = () => setStep("battle");
 
   return (
     <div style={{ minHeight: "100vh" }}>
@@ -66,7 +68,7 @@ const App = () => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={goHome}>
             <FaGamepad className="navbar-icon" />
-            <span className="navbar-title">Challenge  </span>
+            <span className="navbar-title">Challenge </span>
           </div>
 
           <div className="navbar-links">
@@ -141,7 +143,7 @@ const App = () => {
 
       {/* Contenu principal */}
       <main className="main-content">
-        {step === "home" && <Home startQuiz={startQuiz} />}
+        {step === "home" && <Home startQuiz={startQuiz} goBattle={goBattle} />}
         {step === "quiz" && (
           <Quiz questions={questions} onFinish={finishQuiz} />
         )}
@@ -158,6 +160,7 @@ const App = () => {
           <Leaderboard leaderboard={leaderboard} goHome={goHome} />
         )}
         {step === "about" && <About />}
+        {step === "battle" && <Battle goHome={goHome} />}
       </main>
     </div>
   );

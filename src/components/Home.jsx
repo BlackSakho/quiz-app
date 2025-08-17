@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-
-const Home = ({ startQuiz }) => {
+const Home = ({ startQuiz, goBattle }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [pulse, setPulse] = useState(false);
 
@@ -17,7 +16,6 @@ const Home = ({ startQuiz }) => {
   return (
     <div
       style={{
-        /* backgroundImage: `linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%), url(${backgroundImage})`, */
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
@@ -93,6 +91,26 @@ const Home = ({ startQuiz }) => {
         >
           Commencer le Quiz
           <span style={styles.buttonArrow}>→</span>
+        </button>
+
+        <button
+          onClick={goBattle}
+          style={{
+            ...styles.startButton,
+            backgroundColor: "#2196F3",
+            marginTop: "1rem",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = "#1976D2";
+            e.currentTarget.style.transform = "scale(1.05)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = "#2196F3";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          Battle Quiz
+          <span style={{ ...styles.buttonArrow, color: "#fff" }}>⚔️</span>
         </button>
       </div>
     </div>
