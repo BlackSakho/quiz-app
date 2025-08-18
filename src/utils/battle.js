@@ -69,7 +69,7 @@ export async function getBattle(battleId) {
 export async function submitAnswer(battleId, playerName, questionId, answer, isCorrect) {
   // Enregistrer la réponse dans la table battle_answers
   const { error } = await supabase
-    .from("battle_answers")
+    .from("battle_answer")
     .insert([{
       battle_id: battleId,
       player: playerName,
