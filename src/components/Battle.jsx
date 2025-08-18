@@ -54,8 +54,8 @@ const Battle = ({ goHome }) => {
 
   // Gestion de la question actuelle
   useEffect(() => {
-    if (battle?.questions && battle.current_question > 0) {
-      const questionIndex = battle.current_question - 1;
+    if (battle?.questions && battle.current_question >= 0) {
+      const questionIndex = battle.current_question ;
       setCurrentQuestion(battle.questions[questionIndex]);
       setTimer(30);
       setSelectedAnswer(null);
@@ -272,6 +272,7 @@ const Battle = ({ goHome }) => {
       ) : null}
     </div>
   );
+  
 };
 
 // Styles CSS
@@ -550,5 +551,7 @@ const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
+
+
 
 export default Battle;
