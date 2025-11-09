@@ -7,14 +7,18 @@ const battleCache = new Map();
 // Fonction pour obtenir des questions aléatoires avec IDs uniques
 function getRandomQuestions(questionPool, count) {
   const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count).map((q, index) => ({
-    id: `q_${Date.now()}_${index}_${Math.random()
-      .toString(36)
-      .substring(2, 9)}`,
-    question: q.question,
-    options: q.answers.map((a) => a.text),
-    correct_answer: q.answers.find((a) => a.isCorrect).text,
-  }));
+  return shuffled.slice(0, count).map((q, index) => {
+    // Mélanger les réponses pour chaque question
+    const shuffledAnswers = [...q.answers].sort(() => 0.5 - Math.random());
+    return {
+      id: `q_${Date.now()}_${index}_${Math.random()
+        .toString(36)
+        .substring(2, 9)}`,
+      question: q.question,
+      options: shuffledAnswers.map((a) => a.text),
+      correct_answer: shuffledAnswers.find((a) => a.isCorrect).text,
+    };
+  });
 }
 
 // Créer une battle avec des questions aléatoires
