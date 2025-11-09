@@ -18,9 +18,9 @@ function getRandomQuestions(questionPool, count) {
 }
 
 // Créer une battle avec des questions aléatoires
-export async function createBattle(playerName) {
+export async function createBattle(playerName, questionCount = 5) {
   try {
-    const selectedQuestions = getRandomQuestions(questions, 5);
+    const selectedQuestions = getRandomQuestions(questions, questionCount);
 
     const { data, error } = await supabase
       .from("battles")

@@ -13,6 +13,7 @@ import { supabase } from "../utils/supabaseClient";
 const Battle = ({ goHome }) => {
   const [playerName, setPlayerName] = useState("");
   const [battleId, setBattleId] = useState("");
+  const [questionCount, setQuestionCount] = useState(5);
   const [battle, setBattle] = useState(null);
   const [error, setError] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -69,8 +70,10 @@ const Battle = ({ goHome }) => {
 
   const handleCreate = async () => {
     if (!playerName) return setError("Entrez votre nom !");
+    if (questionCount < 5 || questionCount > 100)
+      return setError("Le nombre de questions doit être entre 5 et 100 !");
     setIsLoading(true);
-    const newBattle = await createBattle(playerName);
+    const newBattle = await createBattle(playerName, questionCount);
     if (newBattle) {
       setBattle(newBattle);
       setBattleId(newBattle.id);
@@ -132,6 +135,22 @@ const Battle = ({ goHome }) => {
           placeholder="Votre nom"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
+        />
+      </div>
+
+      <div className="input-group">
+      <h4>Nombre de questions (5-100)</h4>
+        <input
+          type="number"
+          placeholder="Nombre de questions (5-100)"
+          value={questionCount}
+          onChange={(e) =>
+            setQuestionCount(
+              Math.max(5, Math.min(100, parseInt(e.target.value) || 5))
+            )
+          }
+          min="5"
+          max="100"
         />
       </div>
 
