@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   createBattle,
   joinBattle,
-  getBattle,
   submitAnswer,
   nextQuestion,
   endBattle,
@@ -139,7 +138,7 @@ const Battle = ({ goHome }) => {
       </div>
 
       <div className="input-group">
-      <h4>Nombre de questions (5-100)</h4>
+        <h4>Nombre de questions (5-100)</h4>
         <input
           type="number"
           placeholder="Nombre de questions (5-100)"
