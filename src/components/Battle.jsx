@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   createBattle,
   joinBattle,
   submitAnswer,
-  nextQuestion,
-  endBattle,
 } from "../utils/battle";
 import { FaHome, FaUser, FaGamepad, FaCheck, FaSpinner } from "react-icons/fa";
 import { supabase } from "../utils/supabaseClient";
+
+const TIMER_DURATION = 30;
 
 const Battle = ({ goHome }) => {
   const [playerName, setPlayerName] = useState("");
@@ -17,19 +17,16 @@ const Battle = ({ goHome }) => {
   const [error, setError] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(TIMER_DURATION);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    let interval;
-    if (battle?.status === "playing" && timer > 0 && !selectedAnswer) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [battle, timer, selectedAnswer]);
+  const battleRef = useRef(battle);
+  battleRef.current = battle;
+  const selectedRef = useRef(selectedAnswer);
+  selectedRef.current = selectedAnswer;
+  const timeoutSubmitted = useRef(false);
 
+  // Souscription Realtime aux changements de la battle
   useEffect(() => {
     if (!battle?.id) return;
     const channel = supabase
@@ -47,30 +44,77 @@ const Battle = ({ goHome }) => {
         }
       )
       .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => supabase.removeChannel(channel);
   }, [battle?.id]);
 
+  // Met à jour la question courante quand on change de question
   useEffect(() => {
     if (battle?.questions && battle.current_question >= 0) {
       setCurrentQuestion(battle.questions[battle.current_question]);
-      setTimer(30);
       setSelectedAnswer(null);
+      setTimer(TIMER_DURATION);
+      timeoutSubmitted.current = false;
     }
   }, [battle?.current_question, battle?.questions]);
+
+  // Timer synchronisé : recalcule le temps restant depuis question_started_at
+  useEffect(() => {
+    if (battle?.status !== "playing" || !battle?.question_started_at) return;
+
+    const startedAt = new Date(battle.question_started_at).getTime();
+    const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+    const initial = Math.max(0, TIMER_DURATION - elapsed);
+    setTimer(initial);
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) return 0;
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [battle?.status, battle?.question_started_at, battle?.current_question]);
+
+  // Gestion du timeout : soumet une réponse vide quand le timer atteint 0
+  useEffect(() => {
+    if (
+      timer > 0 ||
+      selectedRef.current !== null ||
+      timeoutSubmitted.current ||
+      battleRef.current?.status !== "playing" ||
+      !currentQuestion
+    )
+      return;
+
+    timeoutSubmitted.current = true;
+    const b = battleRef.current;
+
+    submitAnswer(
+      b.id,
+      playerName,
+      currentQuestion.id,
+      "",
+      false,
+      b.current_question
+    ).catch(console.error);
+  }, [timer, playerName, currentQuestion]);
 
   const handleCreate = async () => {
     if (!playerName) return setError("Entrez votre nom !");
     if (questionCount < 5 || questionCount > 100)
       return setError("Le nombre de questions doit être entre 5 et 100 !");
     setIsLoading(true);
-    const newBattle = await createBattle(playerName, questionCount);
-    if (newBattle) {
-      setBattle(newBattle);
-      setBattleId(newBattle.id);
-      setError("");
-    } else {
+    try {
+      const newBattle = await createBattle(playerName, questionCount);
+      if (newBattle) {
+        setBattle(newBattle);
+        setBattleId(newBattle.id);
+        setError("");
+      } else {
+        setError("Erreur lors de la création.");
+      }
+    } catch {
       setError("Erreur lors de la création.");
     }
     setIsLoading(false);
@@ -79,11 +123,15 @@ const Battle = ({ goHome }) => {
   const handleJoin = async () => {
     if (!playerName || !battleId) return setError("Nom et code requis !");
     setIsLoading(true);
-    const joinedBattle = await joinBattle(battleId, playerName);
-    if (joinedBattle) {
-      setBattle(joinedBattle);
-      setError("");
-    } else {
+    try {
+      const joinedBattle = await joinBattle(battleId, playerName);
+      if (joinedBattle) {
+        setBattle(joinedBattle);
+        setError("");
+      } else {
+        setError("Battle introuvable.");
+      }
+    } catch {
       setError("Battle introuvable.");
     }
     setIsLoading(false);
@@ -91,21 +139,30 @@ const Battle = ({ goHome }) => {
 
   const handleAnswer = useCallback(
     async (answer) => {
-      if (selectedAnswer || timer <= 0) return;
+      if (selectedRef.current !== null) return;
       setSelectedAnswer(answer);
+
+      const b = battleRef.current;
+      if (!b || !currentQuestion) return;
+
       const isCorrect = answer === currentQuestion.correct_answer;
-      await submitAnswer(battle.id, playerName, currentQuestion.id, answer, isCorrect);
-      setTimeout(async () => {
-        if (battle.current_question < battle.questions.length - 1) {
-          await nextQuestion(battle.id);
-        } else {
-          await endBattle(battle.id);
-        }
-      }, 3000);
+      try {
+        await submitAnswer(
+          b.id,
+          playerName,
+          currentQuestion.id,
+          answer,
+          isCorrect,
+          b.current_question
+        );
+      } catch (err) {
+        console.error("Erreur soumission réponse:", err);
+      }
     },
-    [selectedAnswer, timer, currentQuestion, battle, playerName]
+    [playerName, currentQuestion]
   );
 
+  // --- RENDU ---
   const renderSetup = () => (
     <div className="battle-card">
       <div className="battle-title">
@@ -124,12 +181,16 @@ const Battle = ({ goHome }) => {
           />
         </div>
         <div>
-          <label className="battle-input-label">Nombre de questions (5-100)</label>
+          <label className="battle-input-label">
+            Nombre de questions (5-100)
+          </label>
           <input
             type="number"
             value={questionCount}
             onChange={(e) =>
-              setQuestionCount(Math.max(5, Math.min(100, parseInt(e.target.value) || 5)))
+              setQuestionCount(
+                Math.max(5, Math.min(100, parseInt(e.target.value) || 5))
+              )
             }
             min="5"
             max="100"
@@ -137,8 +198,16 @@ const Battle = ({ goHome }) => {
           />
         </div>
         <div className="battle-actions">
-          <button onClick={handleCreate} disabled={isLoading} className="btn-create">
-            {isLoading ? <FaSpinner className="spin-icon" /> : "Créer une partie"}
+          <button
+            onClick={handleCreate}
+            disabled={isLoading}
+            className="btn-create"
+          >
+            {isLoading ? (
+              <FaSpinner className="spin-icon" />
+            ) : (
+              "Créer une partie"
+            )}
           </button>
           <div className="battle-separator">OU</div>
           <input
@@ -148,8 +217,16 @@ const Battle = ({ goHome }) => {
             onChange={(e) => setBattleId(e.target.value)}
             className="battle-input"
           />
-          <button onClick={handleJoin} disabled={isLoading} className="btn-join">
-            {isLoading ? <FaSpinner className="spin-icon" /> : "Rejoindre une partie"}
+          <button
+            onClick={handleJoin}
+            disabled={isLoading}
+            className="btn-join"
+          >
+            {isLoading ? (
+              <FaSpinner className="spin-icon" />
+            ) : (
+              "Rejoindre une partie"
+            )}
           </button>
         </div>
         {error && <div className="battle-error">{error}</div>}
@@ -200,7 +277,7 @@ const Battle = ({ goHome }) => {
           const isCorrect = option === currentQuestion.correct_answer;
           const isSelected = selectedAnswer === option;
           let className = "battle-option";
-          if (selectedAnswer) {
+          if (selectedAnswer !== null) {
             if (isCorrect) className += " correct";
             if (isSelected && !isCorrect) className += " incorrect";
           }
@@ -208,19 +285,25 @@ const Battle = ({ goHome }) => {
             <button
               key={index}
               onClick={() => handleAnswer(option)}
-              disabled={!!selectedAnswer || timer <= 0}
+              disabled={selectedAnswer !== null || timer <= 0}
               className={className}
             >
               {option}
-              {selectedAnswer && isCorrect && (
+              {selectedAnswer !== null && isCorrect && (
                 <FaCheck style={{ marginLeft: 8 }} />
               )}
             </button>
           );
         })}
       </div>
-      {selectedAnswer && (
-        <div className={`battle-feedback ${selectedAnswer === currentQuestion.correct_answer ? "correct" : "incorrect"}`}>
+      {selectedAnswer !== null && (
+        <div
+          className={`battle-feedback ${
+            selectedAnswer === currentQuestion.correct_answer
+              ? "correct"
+              : "incorrect"
+          }`}
+        >
           {selectedAnswer === currentQuestion.correct_answer
             ? "Correct ! 🎉"
             : `Incorrect ! La bonne réponse était: ${currentQuestion.correct_answer}`}
@@ -234,26 +317,26 @@ const Battle = ({ goHome }) => {
       <div className="battle-results">
         <h2>Résultats finaux</h2>
         <div className="battle-players-results">
-          <div className="battle-player-result">
-            <span><FaUser /> {battle.player1}</span>
-            <span>
-              {battle.scores[battle.player1] || 0} points
-              {battle.scores[battle.player1] > (battle.scores[battle.player2] || 0) && (
-                <span className="battle-winner-badge" style={{ marginLeft: 8 }}>Gagnant !</span>
-              )}
-            </span>
-          </div>
-          {battle.player2 && (
-            <div className="battle-player-result">
-              <span><FaUser /> {battle.player2}</span>
-              <span>
-                {battle.scores[battle.player2] || 0} points
-                {battle.scores[battle.player2] > battle.scores[battle.player1] && (
-                  <span className="battle-winner-badge" style={{ marginLeft: 8 }}>Gagnant !</span>
-                )}
-              </span>
-            </div>
-          )}
+          {[battle.player1, battle.player2].filter(Boolean).map((p) => {
+            const other = battle.player1 === p ? battle.player2 : battle.player1;
+            const isWinner = (battle.scores[p] || 0) > (battle.scores[other] || 0);
+            const isTie = battle.scores[battle.player1] === battle.scores[battle.player2];
+            return (
+              <div key={p} className="battle-player-result">
+                <span>
+                  <FaUser /> {p}
+                </span>
+                <span>
+                  {battle.scores[p] || 0} points
+                  {isWinner && !isTie && (
+                    <span className="battle-winner-badge" style={{ marginLeft: 8 }}>
+                      Gagnant !
+                    </span>
+                  )}
+                </span>
+              </div>
+            );
+          })}
         </div>
         <button onClick={goHome} className="btn-battle-home">
           <FaHome /> Retour à l'accueil

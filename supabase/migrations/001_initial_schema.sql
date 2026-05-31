@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS battles (
   status TEXT NOT NULL DEFAULT 'waiting'
     CHECK (status IN ('waiting', 'playing', 'finished')),
   current_question INTEGER NOT NULL DEFAULT 0,
+  question_started_at TIMESTAMPTZ,  -- utilisée pour synchroniser le timer entre les deux joueurs
   scores JSONB NOT NULL DEFAULT '{}',
   questions JSONB NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
