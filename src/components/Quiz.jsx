@@ -64,7 +64,7 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
     }
 
     if (mistakes + 1 >= 3 && !isCorrect) {
-      setTimeout(() => onFinish(score), 1000);
+      setTimeout(() => onFinish(score, shuffledQuestions.length), 1000);
     }
   };
 
@@ -77,7 +77,7 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
     if (currentQuestion + 1 < shuffledQuestions.length) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
-      setTimeout(() => onFinish(score), 500);
+      setTimeout(() => onFinish(score, shuffledQuestions.length), 500);
     }
   };
 

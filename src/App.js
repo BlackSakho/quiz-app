@@ -23,6 +23,7 @@ const App = () => {
   const [step, setStep] = useState("home");
   const [leaderboard, setLeaderboard] = useState([]);
   const [score, setScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("quiz-theme") || "light";
@@ -36,12 +37,14 @@ const App = () => {
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const startQuiz = () => setStep("quiz");
-  const finishQuiz = (finalScore) => {
+  const finishQuiz = (finalScore, total) => {
     setScore(finalScore);
+    setTotalQuestions(total);
     setStep("result");
   };
   const restartQuiz = () => {
     setScore(0);
+    setTotalQuestions(0);
     setStep("home");
   };
 
@@ -159,7 +162,7 @@ const App = () => {
         {step === "result" && (
           <Result
             score={score}
-            total={questions.length}
+            total={totalQuestions}
             restartQuiz={restartQuiz}
             saveScore={saveScore}
             goLeaderboard={goLeaderboard}

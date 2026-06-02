@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaRedo, FaTrophy, FaCheck, FaUser } from "react-icons/fa";
+import { FaRedo, FaTrophy, FaCheck, FaUser, FaWhatsapp, FaTwitter } from "react-icons/fa";
 
 const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,6 +26,24 @@ const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
 
   const { level, stars, emoji, color, comment, badge } = getLevel(score);
   const percentage = Math.round((score / total) * 100);
+
+  const shareText = `🎯 QuizMaster - J'ai obtenu ${score}/${total} (${percentage}%) - Niveau : ${level} ${emoji}\n\nTeste-toi aussi sur QuizMaster !`;
+
+  const shareWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener");
+  };
+
+  const shareTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, "_blank", "noopener");
+  };
+
+  const shareNative = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ text: shareText });
+      } catch { /* ignoré */ }
+    }
+  };
 
   const handleSaveScore = () => {
     if (playerName.trim()) {
@@ -105,6 +123,23 @@ const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
                 Voir le classement
               </button>
             )}
+
+            <div className="share-section">
+              <p className="share-label">Partage ton score</p>
+              <div className="share-buttons">
+                <button onClick={shareWhatsApp} className="btn-share whatsapp" title="Partager sur WhatsApp">
+                  <FaWhatsapp /> WhatsApp
+                </button>
+                <button onClick={shareTwitter} className="btn-share twitter" title="Partager sur X">
+                  <FaTwitter /> X
+                </button>
+                {navigator.share && (
+                  <button onClick={shareNative} className="btn-share native" title="Partager">
+                    📤
+                  </button>
+                )}
+              </div>
+            </div>
 
             <button onClick={restartQuiz} className="btn-restart">
               <FaRedo />

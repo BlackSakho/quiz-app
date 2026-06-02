@@ -4,7 +4,7 @@ import {
   joinBattle,
   submitAnswer,
 } from "../utils/battle";
-import { FaHome, FaUser, FaGamepad, FaCheck, FaSpinner, FaCopy } from "react-icons/fa";
+import { FaHome, FaUser, FaGamepad, FaCheck, FaSpinner, FaCopy, FaWhatsapp, FaTwitter } from "react-icons/fa";
 import { supabase } from "../utils/supabaseClient";
 
 const TIMER_DURATION = 30;
@@ -264,9 +264,28 @@ const Battle = ({ goHome, selectedCategory }) => {
           )}
         </div>
         {!battle.player2 && (
-          <div className="waiting-spinner">
-            <FaSpinner className="spin-icon" /> En attente...
-          </div>
+          <>
+            <div className="waiting-spinner">
+              <FaSpinner className="spin-icon" /> En attente...
+            </div>
+            <div className="share-section">
+              <p className="share-label">Invite un ami</p>
+              <div className="share-buttons">
+                <button
+                  onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Rejoins ma partie QuizMaster avec le code : ${battle.code}`)}`, "_blank", "noopener")}
+                  className="btn-share whatsapp"
+                >
+                  <FaWhatsapp /> WhatsApp
+                </button>
+                <button
+                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Rejoins ma partie QuizMaster avec le code : ${battle.code}`)}`, "_blank", "noopener")}
+                  className="btn-share twitter"
+                >
+                  <FaTwitter /> X
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
