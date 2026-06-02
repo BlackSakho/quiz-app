@@ -21,6 +21,7 @@ CREATE INDEX IF NOT EXISTS idx_leaderboard_score ON leaderboard (score DESC);
 -- ============================================================
 CREATE TABLE IF NOT EXISTS battles (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   player1 TEXT NOT NULL,
   player2 TEXT,
   status TEXT NOT NULL DEFAULT 'waiting'

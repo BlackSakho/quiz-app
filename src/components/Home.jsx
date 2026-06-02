@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
+import { categories } from "../utils/categories";
 
-const Home = ({ startQuiz, goBattle }) => {
+const Home = ({ startQuiz, goBattle, selectedCategory, setSelectedCategory }) => {
   const particles = useMemo(() =>
     [...Array(30)].map((_, i) => ({
       id: i,
@@ -30,7 +31,7 @@ const Home = ({ startQuiz, goBattle }) => {
       ))}
 
       <div className="home-content">
-        <div className="home-badge" style={{ animationDelay: "0s" }}>
+        <div className="home-badge">
           <span>✨</span>
           Quiz Challenge
         </div>
@@ -57,6 +58,27 @@ const Home = ({ startQuiz, goBattle }) => {
           <div className="home-feature">
             <span className="home-feature-icon">🏆</span>
             Classement global
+          </div>
+        </div>
+
+        <div className="category-section">
+          <p className="category-label">Choisis une catégorie</p>
+          <div className="category-chips">
+            <button
+              className={`category-chip ${!selectedCategory ? "active" : ""}`}
+              onClick={() => setSelectedCategory(null)}
+            >
+              🎲 Toutes
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.name}
+                className={`category-chip ${selectedCategory === cat.name ? "active" : ""}`}
+                onClick={() => setSelectedCategory(cat.name)}
+              >
+                {cat.icon} {cat.name}
+              </button>
+            ))}
           </div>
         </div>
 

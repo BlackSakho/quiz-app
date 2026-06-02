@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { filterByCategory } from "../utils/categories";
 
 const shuffleArray = (array) => {
   const newArray = [...array];
@@ -9,7 +10,7 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
-const Quiz = ({ questions, onFinish }) => {
+const Quiz = ({ questions, onFinish, selectedCategory }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [mistakes, setMistakes] = useState(0);
@@ -21,12 +22,13 @@ const Quiz = ({ questions, onFinish }) => {
   const [animClass, setAnimClass] = useState("");
 
   useEffect(() => {
-    const shuffled = shuffleArray(questions).map((q) => ({
+    const filtered = filterByCategory(questions, selectedCategory);
+    const shuffled = shuffleArray(filtered).map((q) => ({
       ...q,
       answers: shuffleArray(q.answers),
     }));
     setShuffledQuestions(shuffled);
-  }, [questions]);
+  }, [questions, selectedCategory]);
 
   useEffect(() => {
     if (timeLeft > 0 && !answered) {

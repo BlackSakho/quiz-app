@@ -4,14 +4,14 @@ import {
   joinBattle,
   submitAnswer,
 } from "../utils/battle";
-import { FaHome, FaUser, FaGamepad, FaCheck, FaSpinner } from "react-icons/fa";
+import { FaHome, FaUser, FaGamepad, FaCheck, FaSpinner, FaCopy } from "react-icons/fa";
 import { supabase } from "../utils/supabaseClient";
 
 const TIMER_DURATION = 30;
 
-const Battle = ({ goHome }) => {
+const Battle = ({ goHome, selectedCategory }) => {
   const [playerName, setPlayerName] = useState("");
-  const [battleId, setBattleId] = useState("");
+  const [joinCode, setJoinCode] = useState("");
   const [questionCount, setQuestionCount] = useState(5);
   const [battle, setBattle] = useState(null);
   const [error, setError] = useState("");
@@ -19,6 +19,7 @@ const Battle = ({ goHome }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [timer, setTimer] = useState(TIMER_DURATION);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const battleRef = useRef(battle);
   battleRef.current = battle;
@@ -106,10 +107,9 @@ const Battle = ({ goHome }) => {
       return setError("Le nombre de questions doit être entre 5 et 100 !");
     setIsLoading(true);
     try {
-      const newBattle = await createBattle(playerName, questionCount);
+      const newBattle = await createBattle(playerName, questionCount, selectedCategory);
       if (newBattle) {
         setBattle(newBattle);
-        setBattleId(newBattle.id);
         setError("");
       } else {
         setError("Erreur lors de la création.");
@@ -121,10 +121,10 @@ const Battle = ({ goHome }) => {
   };
 
   const handleJoin = async () => {
-    if (!playerName || !battleId) return setError("Nom et code requis !");
+    if (!playerName || !joinCode) return setError("Nom et code requis !");
     setIsLoading(true);
     try {
-      const joinedBattle = await joinBattle(battleId, playerName);
+      const joinedBattle = await joinBattle(joinCode, playerName);
       if (joinedBattle) {
         setBattle(joinedBattle);
         setError("");
@@ -161,6 +161,14 @@ const Battle = ({ goHome }) => {
     },
     [playerName, currentQuestion]
   );
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(battle.code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* fallback si clipboard refusé */ }
+  };
 
   // --- RENDU ---
   const renderSetup = () => (
@@ -213,8 +221,8 @@ const Battle = ({ goHome }) => {
           <input
             type="text"
             placeholder="Code de la partie"
-            value={battleId}
-            onChange={(e) => setBattleId(e.target.value)}
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value)}
             className="battle-input"
           />
           <button
@@ -240,7 +248,10 @@ const Battle = ({ goHome }) => {
         <h3>En attente d'un adversaire...</h3>
         <div className="waiting-code">
           <span>Code :</span>
-          <span className="waiting-code-value">{battle.id}</span>
+          <span className="waiting-code-value">{battle.code}</span>
+          <button className="btn-copy-code" onClick={copyCode} title="Copier le code">
+            {copied ? "✓" : <FaCopy />}
+          </button>
         </div>
         <div className="waiting-players">
           <div className="waiting-player">

@@ -23,6 +23,7 @@ const App = () => {
   const [step, setStep] = useState("home");
   const [leaderboard, setLeaderboard] = useState([]);
   const [score, setScore] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("quiz-theme") || "light";
   });
@@ -144,9 +145,16 @@ const App = () => {
       </nav>
 
       <main className="main-content">
-        {step === "home" && <Home startQuiz={startQuiz} goBattle={goBattle} />}
+        {step === "home" && (
+          <Home
+            startQuiz={startQuiz}
+            goBattle={goBattle}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
+        )}
         {step === "quiz" && (
-          <Quiz questions={questions} onFinish={finishQuiz} />
+          <Quiz questions={questions} onFinish={finishQuiz} selectedCategory={selectedCategory} />
         )}
         {step === "result" && (
           <Result
@@ -161,7 +169,7 @@ const App = () => {
           <Leaderboard leaderboard={leaderboard} goHome={goHome} />
         )}
         {step === "about" && <About />}
-        {step === "battle" && <Battle goHome={goHome} />}
+        {step === "battle" && <Battle goHome={goHome} selectedCategory={selectedCategory} />}
       </main>
     </div>
   );

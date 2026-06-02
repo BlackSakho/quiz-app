@@ -1,5 +1,15 @@
 import { supabase } from "./supabaseClient";
 import { questions } from "../data/questions";
+import { filterByCategory } from "./categories";
+
+function generateCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
 
 function getRandomQuestions(questionPool, count) {
   const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
@@ -16,11 +26,15 @@ function getRandomQuestions(questionPool, count) {
   });
 }
 
-export async function createBattle(playerName, questionCount = 5) {
-  const selectedQuestions = getRandomQuestions(questions, questionCount);
+export async function createBattle(playerName, questionCount = 5, category = null) {
+  const pool = category ? filterByCategory(questions, category) : questions;
+  if (pool.length < 1) throw new Error("Aucune question disponible pour cette catégorie");
+  const selectedQuestions = getRandomQuestions(pool, Math.min(questionCount, pool.length));
+  let code = generateCode();
   const { data, error } = await supabase
     .from("battles")
     .insert([{
+      code,
       player1: playerName,
       status: "waiting",
       current_question: 0,
@@ -38,11 +52,11 @@ export async function createBattle(playerName, questionCount = 5) {
   return data ? data[0] : null;
 }
 
-export async function joinBattle(battleId, playerName) {
+export async function joinBattle(code, playerName) {
   const { data: existing, error: fetchError } = await supabase
     .from("battles")
-    .select("scores, status, player2")
-    .eq("id", battleId)
+    .select("*")
+    .eq("code", code.toUpperCase())
     .single();
 
   if (fetchError || !existing) throw new Error("Battle introuvable");
@@ -59,7 +73,7 @@ export async function joinBattle(battleId, playerName) {
       scores: updatedScores,
       question_started_at: new Date().toISOString(),
     })
-    .eq("id", battleId)
+    .eq("id", existing.id)
     .select();
 
   if (updateError) {

@@ -110,7 +110,7 @@ const About = () => (
             marginTop: "16px",
           }}
         >
-          QuizMaster v1.0 &mdash; React 19 + Supabase
+          QuizMaster v3.0 &mdash; Blacksakho
         </p>
       </div>
     </div>
