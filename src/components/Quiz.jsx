@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { filterByCategory } from "../utils/categories";
 
 const shuffleArray = (array) => {
@@ -20,6 +20,8 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [animClass, setAnimClass] = useState("");
+  const scoreRef = useRef(score);
+  const totalRef = useRef(0);
 
   useEffect(() => {
     const filtered = filterByCategory(questions, selectedCategory);
@@ -28,7 +30,20 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
       answers: shuffleArray(q.answers),
     }));
     setShuffledQuestions(shuffled);
+    totalRef.current = shuffled.length;
   }, [questions, selectedCategory]);
+
+  const handleTimeOut = useCallback(() => {
+    setAnswered(true);
+    setShowCorrectAnswer(true);
+    setMistakes((prev) => {
+      const newMistakes = prev + 1;
+      if (newMistakes >= 3) {
+        setTimeout(() => onFinish(scoreRef.current, totalRef.current), 1000);
+      }
+      return newMistakes;
+    });
+  }, [onFinish]);
 
   useEffect(() => {
     if (timeLeft > 0 && !answered) {
@@ -40,13 +55,7 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
     if (timeLeft === 0 && !answered) {
       handleTimeOut();
     }
-  }, [timeLeft, answered]);
-
-  const handleTimeOut = () => {
-    setAnswered(true);
-    setShowCorrectAnswer(true);
-    setMistakes((prev) => prev + 1);
-  };
+  }, [timeLeft, answered, handleTimeOut]);
 
   const handleAnswer = (isCorrect, answerIndex) => {
     if (answered) return;
@@ -55,16 +64,22 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
     setAnswered(true);
 
     if (isCorrect) {
-      setScore((prev) => prev + 1);
+      setScore((prev) => {
+        const newScore = prev + 1;
+        scoreRef.current = newScore;
+        return newScore;
+      });
       setAnimClass("correct");
     } else {
-      setMistakes((prev) => prev + 1);
       setShowCorrectAnswer(true);
       setAnimClass("incorrect");
-    }
-
-    if (mistakes + 1 >= 3 && !isCorrect) {
-      setTimeout(() => onFinish(score, shuffledQuestions.length), 1000);
+      setMistakes((prev) => {
+        const newMistakes = prev + 1;
+        if (newMistakes >= 3) {
+          setTimeout(() => onFinish(scoreRef.current, totalRef.current), 1000);
+        }
+        return newMistakes;
+      });
     }
   };
 
@@ -77,7 +92,7 @@ const Quiz = ({ questions, onFinish, selectedCategory }) => {
     if (currentQuestion + 1 < shuffledQuestions.length) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
-      setTimeout(() => onFinish(score, shuffledQuestions.length), 500);
+      setTimeout(() => onFinish(scoreRef.current, totalRef.current), 500);
     }
   };
 
