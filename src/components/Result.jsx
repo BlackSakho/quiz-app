@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FaRedo, FaTrophy, FaCheck, FaUser, FaWhatsapp, FaTwitter } from "react-icons/fa";
+import { FaRedo, FaTrophy, FaCheck, FaUser, FaWhatsapp, FaTwitter, FaSpinner } from "react-icons/fa";
 
 const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
@@ -45,11 +47,17 @@ const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
     }
   };
 
-  const handleSaveScore = () => {
-    if (playerName.trim()) {
-      saveScore(playerName, score);
+  const handleSaveScore = async () => {
+    if (!playerName.trim() || saving) return;
+    setSaveError("");
+    setSaving(true);
+    try {
+      await saveScore(playerName, score);
       setSaved(true);
+    } catch {
+      setSaveError("Erreur lors de l'enregistrement");
     }
+    setSaving(false);
   };
 
   return (
@@ -108,13 +116,14 @@ const Result = ({ score, total, restartQuiz, saveScore, goLeaderboard }) => {
                     className="result-input"
                   />
                 </div>
+                {saveError && <p className="result-error">{saveError}</p>}
                 <button
                   onClick={handleSaveScore}
-                  disabled={!playerName.trim()}
+                  disabled={!playerName.trim() || saving}
                   className="btn-save"
                 >
-                  <FaCheck />
-                  Enregistrer mon score
+                  {saving ? <FaSpinner className="spin-icon" /> : <FaCheck />}
+                  {saving ? "Enregistrement..." : "Enregistrer mon score"}
                 </button>
               </div>
             ) : (

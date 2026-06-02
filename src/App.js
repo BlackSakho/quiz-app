@@ -60,12 +60,13 @@ const App = () => {
   }, []);
 
   const saveScore = async (name, score) => {
-    await supabase.from("leaderboard").insert([{ name, score }]);
-    const { data } = await supabase
+    const { error: insertError } = await supabase.from("leaderboard").insert([{ name, score }]);
+    if (insertError) throw new Error(insertError.message);
+    const { data, error: fetchError } = await supabase
       .from("leaderboard")
       .select("*")
       .order("score", { ascending: false });
-    setLeaderboard(data);
+    if (!fetchError && data) setLeaderboard(data);
   };
 
   const goLeaderboard = () => setStep("leaderboard");

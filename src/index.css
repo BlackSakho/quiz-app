@@ -1053,6 +1053,13 @@ body {
   animation: pulseGlow 1.5s infinite;
 }
 
+.result-error {
+  color: #e17055;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
 .btn-leaderboard {
   display: flex;
   align-items: center;
